@@ -1,10 +1,10 @@
-module github.com/kubeshop/testkube-executor-template
+module github.com/lreimer/testkube-executor-zap
 
 go 1.17
 
 require (
-	github.com/kubeshop/testkube v0.9.1-beta001
-	github.com/stretchr/testify v1.7.0
+	github.com/kubeshop/testkube v0.11.1
+	github.com/stretchr/testify v1.7.1
 )
 
 require (
