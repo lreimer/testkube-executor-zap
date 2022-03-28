@@ -3,6 +3,7 @@ module github.com/lreimer/testkube-executor-zap
 go 1.17
 
 require (
+	github.com/creasty/defaults v1.5.2
 	github.com/kubeshop/testkube v0.11.1
 	github.com/stretchr/testify v1.7.1
 )

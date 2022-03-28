@@ -2,7 +2,7 @@
 
 # Welcome to TestKube ZAP Executor
 
-TestKube ZAP Executor is a test executor to run ZED Attacke proxy scans with [TestKube](https://testkube.io).  
+TestKube ZAP Executor is a test executor to run ZED attack proxy scans with [TestKube](https://testkube.io).  
 
 ## Usage
 
@@ -13,8 +13,14 @@ kubectl apply -f examples/zap-executor.yaml
 
 Issue the following commands to create and start a Gradle test for a given Git repository:
 ```bash
-kubectl testkube tests create --git-uri https://github.com/lreimer/hands-on-testkube.git --git-branch main --type "zap/baseline" --name baseline-test
-kubectl testkube tests run --watch baseline-test
+kubectl testkube test create --filename examples/zap-api.yaml --type "zap/api" --name api-test
+kubectl testkube test run --watch api-test
+
+kubectl testkube test create --filename examples/zap-baseline.yaml --type "zap/baseline" --name baseline-test
+kubectl testkube test run --watch baseline-test
+
+kubectl testkube test create --filename examples/zap-full.yaml --type "zap/full" --name full-test
+kubectl testkube test run --watch full-test
 ```
 
 # Issues and enchancements 
