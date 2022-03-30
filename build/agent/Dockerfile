@@ -9,5 +9,6 @@ ENV GOOS=linux
 RUN cd cmd/agent;go build -o /runner -mod mod -a .
 
 FROM owasp/zap2docker-stable:2.11.1
+ENV ZAP_HOME /zap
 COPY --from=builder /runner /zap/runner
 ENTRYPOINT ["/zap/runner"]
