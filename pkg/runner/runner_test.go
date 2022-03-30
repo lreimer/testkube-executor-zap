@@ -116,6 +116,45 @@ func TestRun(t *testing.T) {
 		assert.Equal(t, result.Status, testkube.ExecutionStatusSuccess)
 		assert.Len(t, result.Steps, 2)
 	})
+
+	t.Run("Run Baseline scan with WARN", func(t *testing.T) {
+		// given
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.TestName = "baseline-warn-scan"
+		execution.TestType = "zap/baseline"
+		execution.Content = testkube.NewStringTestContent("")
+		writeTestContent(t, tempDir, "../../examples/test-baseline-warn.yaml")
+
+		// when
+		result, err := runner.Run(*execution)
+
+		// then
+		assert.NoError(t, err)
+		assert.Equal(t, result.Status, testkube.ExecutionStatusSuccess)
+		assert.Len(t, result.Steps, 2)
+		assert.Equal(t, result.Steps[1].Status, "success")
+	})
+
+	t.Run("Run Full scan with FAIL", func(t *testing.T) {
+		// given
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.TestName = "full-fail-scan"
+		execution.TestType = "zap/full"
+		execution.Content = testkube.NewStringTestContent("")
+		writeTestContent(t, tempDir, "../../examples/test-full-fail.yaml")
+
+		// when
+		result, err := runner.Run(*execution)
+
+		// then
+		assert.Error(t, err)
+		assert.Equal(t, result.Status, testkube.ExecutionStatusError)
+		assert.Len(t, result.Steps, 2)
+		assert.Equal(t, result.Steps[0].Status, "error")
+		assert.Equal(t, result.Steps[1].Status, "error")
+	})
 }
 
 func writeTestContent(t *testing.T, dir string, configFile string) {

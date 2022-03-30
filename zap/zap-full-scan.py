@@ -38,19 +38,22 @@ def main(argv):
     print('Add-on downloaded to: /home/zap/.ZAP/plugin/pscanrulesBeta-beta-28.zap')
     print('Total of 615 URLs')
 
-    if target == 'https://www.qaware.de':
+    if target == 'https://www.example.com/pass/':
         print('PASS: Vulnerable JS Library [10003]')
         print('PASS: Cookie No HttpOnly Flag [10010]')
         pass_count = 2
-    elif target == 'https://www.example.de':
+    elif target == 'https://www.example.com/warn/':
         print('PASS: X-AspNet-Version Response Header [10061]')
         print('WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ')
-        print('        https://www.example.de (200 OK)')
+        pass_count = 1
         warn_count = 1
-    elif target == 'https://www.unknown.de':
-        print('PASS: Reverse Tabnabbing [10108]')
+    elif target == 'https://www.example.com/fail/':
+        print('WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ')
+        print('        https://www.example.com (200 OK)')
         print('FAIL: Unknown issue')
-        print('        https://www.unknown.de (200 OK)')
+        print('        https://www.example.com (200 OK)')
+        pass_count = 0
+        warn_count = 1
         fail_count = 1
 
     if fail_count > 0:
