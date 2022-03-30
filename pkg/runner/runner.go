@@ -138,9 +138,9 @@ func zapArgs(scanType string, options Options, reportFile string) (args []string
 	case scanType == API:
 		args = options.ToApiScanArgs(reportFile)
 	case scanType == BASELINE:
-		args = options.ToApiScanArgs(reportFile)
+		args = options.ToBaselineScanArgs(reportFile)
 	case scanType == FULL:
-		args = options.ToApiScanArgs(reportFile)
+		args = options.ToFullScanArgs(reportFile)
 	}
 	return args
 }

@@ -98,6 +98,24 @@ func TestRun(t *testing.T) {
 		assert.Equal(t, result.Steps[0].Name, "Unknown issue")
 		assert.Equal(t, result.Steps[0].Status, "error")
 	})
+
+	t.Run("Run Baseline scan with PASS", func(t *testing.T) {
+		// given
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.TestName = "baseline-scan"
+		execution.TestType = "zap/baseline"
+		execution.Content = testkube.NewStringTestContent("")
+		writeTestContent(t, tempDir, "../../examples/test-baseline-pass.yaml")
+
+		// when
+		result, err := runner.Run(*execution)
+
+		// then
+		assert.NoError(t, err)
+		assert.Equal(t, result.Status, testkube.ExecutionStatusSuccess)
+		assert.Len(t, result.Steps, 2)
+	})
 }
 
 func writeTestContent(t *testing.T, dir string, configFile string) {
