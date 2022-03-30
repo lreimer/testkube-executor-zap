@@ -19,7 +19,7 @@ func TestRun(t *testing.T) {
 	os.Setenv("RUNNER_DATADIR", tempDir)
 	os.Setenv("ZAP_HOME", "../../zap/")
 
-	t.Run("Run simple API scan", func(t *testing.T) {
+	t.Run("Run successful API scan", func(t *testing.T) {
 		// given
 		runner := NewRunner()
 		execution := testkube.NewQueuedExecution()
@@ -35,6 +35,48 @@ func TestRun(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, result.Status, testkube.ExecutionStatusSuccess)
 		assert.Len(t, result.Steps, 2)
+		assert.Equal(t, result.Steps[0].Name, "PASS: Vulnerable JS Library [10003]")
+		assert.Equal(t, result.Steps[0].Status, "success")
+	})
+
+	t.Run("Run API scan with PASS and WARN", func(t *testing.T) {
+		// given
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.TestName = "warn-api-scan"
+		execution.TestType = "zap/api"
+		execution.Content = testkube.NewStringTestContent("")
+		writeTestContent(t, tempDir, "../../examples/test-api-warn.yaml")
+
+		// when
+		result, err := runner.Run(*execution)
+
+		// then
+		assert.NoError(t, err)
+		assert.Equal(t, result.Status, testkube.ExecutionStatusSuccess)
+		assert.Len(t, result.Steps, 2)
+		assert.Equal(t, result.Steps[1].Name, "WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ")
+		assert.Equal(t, result.Steps[1].Status, "success")
+	})
+
+	t.Run("Run API scan with WARN and FailOnWarn", func(t *testing.T) {
+		// given
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.TestName = "fail-on-warn-api-scan"
+		execution.TestType = "zap/api"
+		execution.Content = testkube.NewStringTestContent("")
+		writeTestContent(t, tempDir, "../../examples/test-api-fail-on-warn.yaml")
+
+		// when
+		result, err := runner.Run(*execution)
+
+		// then
+		assert.Error(t, err)
+		assert.Equal(t, result.Status, testkube.ExecutionStatusError)
+		assert.Len(t, result.Steps, 2)
+		assert.Equal(t, result.Steps[1].Name, "WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ")
+		assert.Equal(t, result.Steps[1].Status, "error")
 	})
 }
 

@@ -46,11 +46,13 @@ def main(argv):
         print('PASS: X-AspNet-Version Response Header [10061]')
         print('WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ')
         print('        https://www.example.com (200 OK)')
+        pass_count = 1
         warn_count = 1
     elif target == 'https://www.example.com/fail/openapi.json':
         print('PASS: Reverse Tabnabbing [10108]')
         print('FAIL: Unknown issue')
         print('        https://www.example.com (200 OK)')
+        pass_count = 1
         fail_count = 1
 
     if fail_count > 0:
