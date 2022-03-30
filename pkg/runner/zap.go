@@ -2,6 +2,7 @@ package runner
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	"github.com/creasty/defaults"
@@ -35,6 +36,8 @@ type ApiOptions struct {
 	Time int `default:"0" yaml:"time"`
 	// ZAP command line options
 	ZapOptions string `yaml:"zap_options"`
+	// fail the scan on WARN issues, default true
+	FailOnWarn bool `default:"true" yaml:"fail_on_warn"`
 }
 
 type BaselineOptions struct {
@@ -62,6 +65,8 @@ type BaselineOptions struct {
 	Ajax bool `default:"false" yaml:"ajax"`
 	// ZAP command line options
 	ZapOptions string `yaml:"zap_options"`
+	// fail the scan on WARN issues, default true
+	FailOnWarn bool `default:"true" yaml:"fail_on_warn"`
 }
 
 type FullOptions struct {
@@ -89,6 +94,8 @@ type FullOptions struct {
 	Ajax bool `default:"false" yaml:"ajax"`
 	// ZAP command line options
 	ZapOptions string `yaml:"zap_options"`
+	// fail the scan on WARN issues, default true
+	FailOnWarn bool `default:"true" yaml:"fail_on_warn"`
 }
 
 type Options struct {
@@ -97,12 +104,17 @@ type Options struct {
 	Full     FullOptions     `yaml:"full"`
 }
 
-func (a *Options) UnmarshalYAML(in []byte) (err error) {
+func (a *Options) UnmarshalYAML(yamlFile string) (err error) {
+	bytes, err := ioutil.ReadFile(yamlFile)
+	if err != nil {
+		return err
+	}
+
 	if err := defaults.Set(a); err != nil {
 		return err
 	}
 
-	if err := yaml.Unmarshal(in, a); err != nil {
+	if err := yaml.Unmarshal(bytes, a); err != nil {
 		return err
 	}
 
@@ -116,6 +128,7 @@ func (a *Options) ToFullScanArgs(filename string) (args []string) {
 	args = appendMinutesArg(args, a.Full.Minutes)
 	args = appendDebugArg(args, a.Full.Debug)
 	args = appendDelayArg(args, a.Full.Delay)
+	args = appendFailOnWarnArg(args, a.Full.FailOnWarn)
 	args = appendAjaxSpiderArg(args, a.Full.Ajax)
 	args = appendLevelArg(args, a.Full.Level)
 	args = appendConfigArg(args, a.Full.Context)
@@ -134,6 +147,7 @@ func (a *Options) ToBaselineScanArgs(filename string) (args []string) {
 	args = appendMinutesArg(args, a.Baseline.Minutes)
 	args = appendDebugArg(args, a.Baseline.Debug)
 	args = appendDelayArg(args, a.Baseline.Delay)
+	args = appendFailOnWarnArg(args, a.Baseline.FailOnWarn)
 	args = appendAjaxSpiderArg(args, a.Baseline.Ajax)
 	args = appendLevelArg(args, a.Baseline.Level)
 	args = appendContextArg(args, a.Baseline.Context)
@@ -153,6 +167,7 @@ func (a *Options) ToApiScanArgs(filename string) (args []string) {
 	args = appendConfigArg(args, a.API.Config)
 	args = appendDebugArg(args, a.API.Debug)
 	args = appendDelayArg(args, a.API.Delay)
+	args = appendFailOnWarnArg(args, a.API.FailOnWarn)
 	args = appendLevelArg(args, a.API.Level)
 	args = appendContextArg(args, a.API.Context)
 	args = appendShortArg(args, a.API.Short)
@@ -190,7 +205,7 @@ func appendHostnameArg(args []string, hostname string) []string {
 }
 
 func appendReportArg(args []string, filename string) []string {
-	return appendStringArg(args, "-x", filename)
+	return appendStringArg(args, "-r", filename)
 }
 
 func appendZapOptionsArg(args []string, options string) []string {
@@ -227,6 +242,10 @@ func appendShortArg(args []string, short bool) []string {
 
 func appendSafeArg(args []string, safe bool) []string {
 	return appendBoolArg(args, "-S", safe)
+}
+
+func appendFailOnWarnArg(args []string, failOnWarn bool) []string {
+	return appendBoolArg(args, "-I", !failOnWarn)
 }
 
 func appendAjaxSpiderArg(args []string, ajax bool) []string {

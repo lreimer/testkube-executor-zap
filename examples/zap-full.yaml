@@ -13,3 +13,5 @@ full:
   level: FAIL
   # -j use the Ajax spider in addition to the traditional one
   ajax: true
+  # -I do not fail on WARN
+  fail_on_warn: false
