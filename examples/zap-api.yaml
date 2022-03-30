@@ -25,3 +25,5 @@ api:
   time: 60
   # ZAP command line options
   zap_options: -config aaa=bbb
+  # -I should ZAP fail on warnings
+  fail_on_warn: false

@@ -23,6 +23,39 @@ kubectl testkube test create --filename examples/zap-full.yaml --type "zap/full"
 kubectl testkube test run --watch full-test
 ```
 
+The required ZAP arguments and options need to be specified via a dedicated YAML configuration file, e.g.
+```yaml
+api:
+  # -t the target API definition
+  target: https://www.example.com/openapi.json
+  # -f the API format, openapi, soap, or graphql
+  format: openapi
+  # -O the hostname to override in the (remote) OpenAPI spec
+  hostname: https://www.example.com
+  # -S safe mode this will skip the active scan and perform a baseline scan
+  safe: true
+  # -c config file
+  config: examples/zap-api.conf
+  # -d show debug messages
+  debug: true
+  # -s short output
+  short: false
+  # -l minimum level to show: PASS, IGNORE, INFO, WARN or FAIL
+  level: INFO
+  # -c context file
+  context: examples/context.config
+  # username to use for authenticated scans
+  user: anonymous
+  # delay in seconds to wait for passive scanning
+  delay: 5
+  # max time in minutes to wait for ZAP to start and the passive scan to run
+  time: 60
+  # ZAP command line options
+  zap_options: -config aaa=bbb
+  # -I should ZAP fail on warnings
+  fail_on_warn: false
+```
+
 # Issues and enchancements 
 
 Please follow the main [TestKube repository](https://github.com/kubeshop/testkube) for reporting any [issues](https://github.com/kubeshop/testkube/issues) or [discussions](https://github.com/kubeshop/testkube/discussions)
