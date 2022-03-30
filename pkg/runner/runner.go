@@ -90,25 +90,25 @@ func (r *ZapRunner) Run(execution testkube.Execution) (result testkube.Execution
 	result.Output = string(output)
 	result.OutputType = "text/plain"
 
-	// prepare step results base on output
+	// prepare step results based on output
 	result.Steps = []testkube.ExecutionStepResult{}
 	lines := strings.Split(result.Output, "\n")
 	for _, line := range lines {
 		if strings.Index(line, "PASS") == 0 || strings.Index(line, "INFO") == 0 {
 			result.Steps = append(result.Steps, testkube.ExecutionStepResult{
-				Name: line,
+				Name: stepName(line),
 				// always success
 				Status: string(testkube.SUCCESS_ExecutionStatus),
 			})
 		} else if strings.Index(line, "WARN") == 0 {
 			result.Steps = append(result.Steps, testkube.ExecutionStepResult{
-				Name: line,
+				Name: stepName(line),
 				// depends on the options if WARN will fail or not
 				Status: warnStatus(scanType, options),
 			})
 		} else if strings.Index(line, "FAIL") == 0 {
 			result.Steps = append(result.Steps, testkube.ExecutionStepResult{
-				Name: line,
+				Name: stepName(line),
 				// always error
 				Status: string(testkube.ERROR__ExecutionStatus),
 			})
@@ -143,6 +143,10 @@ func zapArgs(scanType string, options Options, reportFile string) (args []string
 		args = options.ToApiScanArgs(reportFile)
 	}
 	return args
+}
+
+func stepName(line string) string {
+	return strings.TrimSpace(strings.SplitAfter(line, ":")[1])
 }
 
 func warnStatus(scanType string, options Options) string {

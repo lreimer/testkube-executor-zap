@@ -35,7 +35,7 @@ func TestRun(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, result.Status, testkube.ExecutionStatusSuccess)
 		assert.Len(t, result.Steps, 2)
-		assert.Equal(t, result.Steps[0].Name, "PASS: Vulnerable JS Library [10003]")
+		assert.Equal(t, result.Steps[0].Name, "Vulnerable JS Library [10003]")
 		assert.Equal(t, result.Steps[0].Status, "success")
 	})
 
@@ -55,7 +55,7 @@ func TestRun(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, result.Status, testkube.ExecutionStatusSuccess)
 		assert.Len(t, result.Steps, 2)
-		assert.Equal(t, result.Steps[1].Name, "WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ")
+		assert.Equal(t, result.Steps[1].Name, "Re-examine Cache-control Directives [10015] x 12")
 		assert.Equal(t, result.Steps[1].Status, "success")
 	})
 
@@ -75,7 +75,7 @@ func TestRun(t *testing.T) {
 		assert.Error(t, err)
 		assert.Equal(t, result.Status, testkube.ExecutionStatusError)
 		assert.Len(t, result.Steps, 2)
-		assert.Equal(t, result.Steps[1].Name, "WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ")
+		assert.Equal(t, result.Steps[1].Name, "Re-examine Cache-control Directives [10015] x 12")
 		assert.Equal(t, result.Steps[1].Status, "error")
 	})
 
@@ -95,7 +95,7 @@ func TestRun(t *testing.T) {
 		assert.Error(t, err)
 		assert.Equal(t, result.Status, testkube.ExecutionStatusError)
 		assert.Len(t, result.Steps, 1)
-		assert.Equal(t, result.Steps[0].Name, "FAIL: Unknown issue")
+		assert.Equal(t, result.Steps[0].Name, "Unknown issue")
 		assert.Equal(t, result.Steps[0].Status, "error")
 	})
 }
