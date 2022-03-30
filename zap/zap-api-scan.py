@@ -49,10 +49,9 @@ def main(argv):
         pass_count = 1
         warn_count = 1
     elif target == 'https://www.example.com/fail/openapi.json':
-        print('PASS: Reverse Tabnabbing [10108]')
         print('FAIL: Unknown issue')
         print('        https://www.example.com (200 OK)')
-        pass_count = 1
+        pass_count = 0
         fail_count = 1
 
     if fail_count > 0:

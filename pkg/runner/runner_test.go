@@ -78,6 +78,26 @@ func TestRun(t *testing.T) {
 		assert.Equal(t, result.Steps[1].Name, "WARN-NEW: Re-examine Cache-control Directives [10015] x 12 ")
 		assert.Equal(t, result.Steps[1].Status, "error")
 	})
+
+	t.Run("Run API scan with FAIL", func(t *testing.T) {
+		// given
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.TestName = "fail-api-scan"
+		execution.TestType = "zap/api"
+		execution.Content = testkube.NewStringTestContent("")
+		writeTestContent(t, tempDir, "../../examples/test-api-fail.yaml")
+
+		// when
+		result, err := runner.Run(*execution)
+
+		// then
+		assert.Error(t, err)
+		assert.Equal(t, result.Status, testkube.ExecutionStatusError)
+		assert.Len(t, result.Steps, 1)
+		assert.Equal(t, result.Steps[0].Name, "FAIL: Unknown issue")
+		assert.Equal(t, result.Steps[0].Status, "error")
+	})
 }
 
 func writeTestContent(t *testing.T, dir string, configFile string) {
