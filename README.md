@@ -11,7 +11,7 @@ You need to register and deploy the executor in your cluster.
 kubectl apply -f examples/zap-executor.yaml
 ```
 
-Issue the following commands to create and start a Gradle test for a given Git repository:
+Issue the following commands to create and start a ZAP test for a given YAML configuration file:
 ```bash
 kubectl testkube test create --filename examples/zap-api.yaml --type "zap/api" --name api-test
 kubectl testkube test run --watch api-test
