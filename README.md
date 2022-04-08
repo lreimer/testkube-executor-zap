@@ -1,3 +1,6 @@
+:information_source: This repository has been archived on favour of the now official [TestKube ZAP Executor](https://github.com/testkube/testkube-executor-zap)
+
+
 ![Testkube Logo](https://raw.githubusercontent.com/kubeshop/testkube/main/assets/testkube-color-gray.png)
 
 # Welcome to TestKube ZAP Executor
